@@ -4,6 +4,7 @@ package com.example.shopping.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -100,5 +101,11 @@ public class Product implements Parcelable {
         dest.writeDouble(price);
         dest.writeString(description);
         dest.writeString(url);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "id: " + id + " title: " + title;
     }
 }

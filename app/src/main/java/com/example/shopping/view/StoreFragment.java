@@ -44,11 +44,6 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
 
         init(root);
 
-        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
-            recyclerViewAdapter.notifyDataSetChanged();
-            setRecyclerView(products);
-        });
-
         setRecyclerView(new ArrayList<>());
         return root;
     }
@@ -57,6 +52,11 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
         context = getContext();
         recyclerView = root.findViewById(R.id.rvProduct);
         viewModel = new ViewModelProvider(this).get(StoreViewModel.class);
+
+        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+            recyclerViewAdapter.notifyDataSetChanged();
+            setRecyclerView(products);
+        });
 
         viewModel.getProductsApi();
     }
