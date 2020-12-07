@@ -12,5 +12,5 @@ public class WebServiceClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    public static RestApi restApi = retrofit.create(RestApi.class);
+    public static ProductApi productApi = retrofit.create(ProductApi.class);
 }

@@ -39,7 +39,8 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         init(binding.getRoot());
 
         assert getArguments() != null;
-        product = getArguments().getParcelable("product");
+        product = (Product) getArguments().getSerializable("product");
+//        product = getArguments().getParcelable("product");
         binding.setProduct(product);
 
         return binding.getRoot();
@@ -63,16 +64,13 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnAddToCart:
-                Toast.makeText(context, "Add to Cart Clicked", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btnAddToCart2:
-                viewModel.insert(product);
-                break;
-            default:
-                Log.e(TAG, "onClick: didn't specify case");
-                break;
+        int id = v.getId();
+
+        if (id == R.id.btnAddToCart){
+            Toast.makeText(context, "Add to Cart Clicked", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.btnAddToCart2){
+            viewModel.insert(product);
         }
+
     }
 }

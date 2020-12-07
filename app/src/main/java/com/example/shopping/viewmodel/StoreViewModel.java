@@ -35,7 +35,7 @@ public class StoreViewModel extends AndroidViewModel {
     }
 
     public void getProductsApi() {
-        Call<List<Product>> productsCall = WebServiceClient.restApi.getProducts();
+        Call<List<Product>> productsCall = WebServiceClient.productApi.getProducts();
 
         productsCall.enqueue(new Callback<List<Product>>() {
             @Override

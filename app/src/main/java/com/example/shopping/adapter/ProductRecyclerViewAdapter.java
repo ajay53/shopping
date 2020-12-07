@@ -19,9 +19,9 @@ import java.util.List;
 
 public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder> {
 
-    private OnItemCLickListener onItemCLickListener;
-    private Context context;
-    private List<Product> products;
+    private final OnItemCLickListener onItemCLickListener;
+    private final Context context;
+    private final List<Product> products;
 
     public ProductRecyclerViewAdapter(Context context, List<Product> products, OnItemCLickListener onItemCLickListener) {
         this.context = context;
@@ -42,12 +42,12 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
         Glide.with(context)
                 .asBitmap()
-                .placeholder(R.drawable.ic_dissatisfied)
+                .placeholder(R.drawable.ic_shopping_cart)
                 .load(products.get(position).getUrl())
                 .into(holder.imgProduct);
 
         holder.tvTitle.setText(products.get(position).getTitle());
-        holder.tvPrice.setText(Util.getFormattedString(products.get(position).getPrice()));
+        holder.tvPrice.setText(Util.getPriceFormattedString(products.get(position).getPrice()));
     }
 
     @Override

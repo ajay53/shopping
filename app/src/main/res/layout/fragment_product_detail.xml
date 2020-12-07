@@ -52,7 +52,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/imgProduct"
                         android:layout_margin="@dimen/text_margin"
-                        android:text="@{Util.getFormattedString(product.price)}"
+                        android:text="@{Util.getPriceFormattedString(product.price)}"
                         android:textAppearance="?attr/textAppearanceListItem"
                         android:textSize="17sp" />
 
@@ -111,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/imgProduct2"
                         android:layout_margin="@dimen/text_margin"
-                        android:text="@{Util.getFormattedString(product.price)}"
+                        android:text="@{Util.getPriceFormattedString(product.price)}"
                         android:textAppearance="?attr/textAppearanceListItem"
                         android:textSize="17sp" />
 

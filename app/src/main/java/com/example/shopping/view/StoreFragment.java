@@ -73,7 +73,8 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
         Product product = Objects.requireNonNull(viewModel.getProducts().getValue()).get(position);
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable("product", product);
+//        bundle.putParcelable("product", product);
+        bundle.putSerializable("product", product);
 
         NavController navController = Navigation.findNavController(this.requireActivity(), R.id.nav_host_fragment);
         navController.navigate(R.id.nav_product_detail, bundle);

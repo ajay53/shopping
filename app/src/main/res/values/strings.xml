@@ -14,4 +14,8 @@
 
 
     <string name="tvAddToCart">Add To Cart</string>
+    <string name="cartIsEmpty">Cart is Empty</string>
+    <string name="tvBuy">Buy</string>
+    <string name="tvBuyAll">Buy All</string>
+    <string name="tvRemoveAllFromCart">Remove All From Cart</string>
 </resources>
