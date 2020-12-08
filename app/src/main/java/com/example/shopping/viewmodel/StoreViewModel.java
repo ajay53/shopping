@@ -21,8 +21,8 @@ public class StoreViewModel extends AndroidViewModel {
 
     private static final String TAG = "StoreViewModel";
 
-    private ProductRepository repository;
-    private MutableLiveData<List<Product>> mProducts;
+    private final ProductRepository repository;
+    private final MutableLiveData<List<Product>> mProducts;
 
     public StoreViewModel(Application application) {
         super(application);
@@ -35,6 +35,8 @@ public class StoreViewModel extends AndroidViewModel {
     }
 
     public void getProductsApi() {
+        Log.d(TAG, "getProductsApi: ");
+
         Call<List<Product>> productsCall = WebServiceClient.productApi.getProducts();
 
         productsCall.enqueue(new Callback<List<Product>>() {

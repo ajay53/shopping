@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProductRepository {
 
-    private ProductDao productDao;
+    private final ProductDao productDao;
 
     public ProductRepository(Application application) {
         DatabaseHandler handler = DatabaseHandler.getInstance(application);
@@ -30,7 +30,7 @@ public class ProductRepository {
 
     private static class InsertProductAsyncTask extends AsyncTask<Product, Void, Void> {
 
-        private ProductDao productDao;
+        private final ProductDao productDao;
 
         private InsertProductAsyncTask(ProductDao productDao) {
             this.productDao = productDao;

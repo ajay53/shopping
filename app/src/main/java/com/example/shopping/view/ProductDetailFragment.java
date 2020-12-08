@@ -12,17 +12,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.shopping.R;
 import com.example.shopping.databinding.FragmentProductDetailBinding;
 import com.example.shopping.model.Product;
 import com.example.shopping.viewmodel.ProductDetailViewModel;
-import com.example.shopping.viewmodel.StoreViewModel;
-
-import java.util.List;
 
 public class ProductDetailFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "ProductDetailFragment";
@@ -40,19 +35,19 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
         assert getArguments() != null;
         product = (Product) getArguments().getSerializable("product");
-//        product = getArguments().getParcelable("product");
         binding.setProduct(product);
 
         return binding.getRoot();
     }
 
     private void init(View view) {
+        Log.d(TAG, "init: ");
 
         context = requireContext();
         viewModel = new ViewModelProvider(this).get(ProductDetailViewModel.class);
 
         viewModel.getAll().observe(getViewLifecycleOwner(), products -> {
-
+            Toast.makeText(context, "all Products Changes", Toast.LENGTH_SHORT).show();
             Toast.makeText(context, "all Products Changes", Toast.LENGTH_SHORT).show();
         });
 
@@ -64,11 +59,16 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Log.d(TAG, "onClick: ");
+
         int id = v.getId();
 
         if (id == R.id.btnAddToCart){
-            Toast.makeText(context, "Add to Cart Clicked", Toast.LENGTH_SHORT).show();
+            //check for already inCart item
+
+            Toast.makeText(context, "Item already in Cart", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.btnAddToCart2){
+            product.setPurchased(true);
             viewModel.insert(product);
         }
 

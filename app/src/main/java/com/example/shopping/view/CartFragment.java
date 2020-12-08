@@ -2,6 +2,7 @@ package com.example.shopping.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = "CartFragment";
 
     private RecyclerView recyclerView = null;
     private ProductRecyclerViewAdapter recyclerViewAdapter = null;
@@ -43,6 +45,8 @@ public class CartFragment extends Fragment implements View.OnClickListener {
     }
 
     private void init(View root) {
+        Log.d(TAG, "init: ");
+
         context = getContext();
         recyclerView = root.findViewById(R.id.rvCart);
         tvTotalPrice = root.findViewById(R.id.tvTotalPrice);
@@ -66,6 +70,8 @@ public class CartFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setRecyclerView(List<Product> products) {
+        Log.d(TAG, "setRecyclerView: ");
+
         recyclerViewAdapter = new ProductRecyclerViewAdapter(context, products, null);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -73,16 +79,14 @@ public class CartFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnBuyAll:
+        Log.d(TAG, "onClick: ");
+        
+        int id = v.getId();
 
-                // do your code
-                break;
-            case R.id.tvRemoveAllFromCart:
-                // do your code
-                break;
-            default:
-                break;
+        if (id == R.id.btnBuyAll) {
+
+        } else if (id == R.id.tvRemoveAllFromCart) {
+
         }
     }
 }

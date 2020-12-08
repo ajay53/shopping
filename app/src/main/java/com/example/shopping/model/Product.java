@@ -1,8 +1,5 @@
 package com.example.shopping.model;
 
-
-import android.os.Parcel;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -20,6 +17,7 @@ public class Product implements Serializable {
     private String description;
     @SerializedName("image")
     private String url;
+    private boolean isPurchased;
 
     public Product(int id, String title, double price, String description, String url) {
         this.id = id;
@@ -27,14 +25,6 @@ public class Product implements Serializable {
         this.price = price;
         this.description = description;
         this.url = url;
-    }
-
-    protected Product(Parcel in) {
-        id = in.readInt();
-        title = in.readString();
-        price = in.readDouble();
-        description = in.readString();
-        url = in.readString();
     }
 
     public int getId() {
@@ -75,5 +65,13 @@ public class Product implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean isPurchased() {
+        return isPurchased;
+    }
+
+    public void setPurchased(boolean purchased) {
+        isPurchased = purchased;
     }
 }

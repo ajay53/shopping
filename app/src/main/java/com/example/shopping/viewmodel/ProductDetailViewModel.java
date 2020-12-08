@@ -13,8 +13,8 @@ import java.util.List;
 
 public class ProductDetailViewModel extends AndroidViewModel {
 
-    private ProductRepository repository;
-    private LiveData<List<Product>> allProducts;
+    private final ProductRepository repository;
+    private final LiveData<List<Product>> allProducts;
 
     public ProductDetailViewModel(@NonNull Application application) {
         super(application);

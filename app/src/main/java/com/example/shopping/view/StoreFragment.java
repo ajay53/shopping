@@ -1,7 +1,6 @@
 package com.example.shopping.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -49,6 +47,8 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
     }
 
     private void init(View root) {
+        Log.d(TAG, "init: ");
+
         context = getContext();
         recyclerView = root.findViewById(R.id.rvProduct);
         viewModel = new ViewModelProvider(this).get(StoreViewModel.class);
@@ -62,6 +62,8 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
     }
 
     private void setRecyclerView(List<Product> products) {
+        Log.d(TAG, "setRecyclerView: ");
+
         recyclerViewAdapter = new ProductRecyclerViewAdapter(context, products, this);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -69,6 +71,8 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
 
     @Override
     public void onItemClick(int position) {
+        Log.d(TAG, "onItemClick: ");
+
         Log.d(TAG, "onItemClick: ");
         Product product = Objects.requireNonNull(viewModel.getProducts().getValue()).get(position);
 
