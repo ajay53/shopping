@@ -14,10 +14,11 @@ import java.util.List;
 public class CartViewModel extends AndroidViewModel {
 
     private final LiveData<List<Product>> allProducts;
+    ProductRepository repository;
 
     public CartViewModel(@NonNull Application application) {
         super(application);
-        ProductRepository repository = new ProductRepository(application);
+        repository = new ProductRepository(application);
         allProducts = repository.getAll();
     }
 
@@ -25,12 +26,16 @@ public class CartViewModel extends AndroidViewModel {
         return allProducts;
     }
 
-    public double getTotal(List<Product> products){
+    public double getTotal(List<Product> products) {
         double totalPrice = 0.0;
         for (Product product :
                 products) {
             totalPrice += product.getPrice();
         }
         return totalPrice;
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

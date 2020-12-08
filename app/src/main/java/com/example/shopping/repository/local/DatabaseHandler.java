@@ -48,7 +48,7 @@ public abstract class DatabaseHandler extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            productDao.insert(new Product(99, "test title", 99.99, "test Description", "test url"));
+//            productDao.insert(new Product(99, "test title", 99.99, "test Description", "test url"));
             return null;
         }
     }

@@ -33,6 +33,10 @@ public class ProductRepository {
         new DeleteProductAsyncTask(productDao).execute(product);
     }
 
+    public void deleteAll() {
+        new DeleteAllAsyncTask(productDao).execute();
+    }
+
     public void get(int id, AsyncResponse asyncResponse) {
         new GetProductAsyncTask(productDao, asyncResponse).execute(id);
     }
@@ -67,9 +71,24 @@ public class ProductRepository {
         }
     }
 
+    private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private final ProductDao productDao;
+
+        private DeleteAllAsyncTask(ProductDao productDao) {
+            this.productDao = productDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            productDao.deleteAll();
+            return null;
+        }
+    }
+
     private static class GetProductAsyncTask extends AsyncTask<Integer, Void, Product> {
 
-        public AsyncResponse asyncResponse = null;
+        public AsyncResponse asyncResponse;
         private final ProductDao productDao;
 
         private GetProductAsyncTask(ProductDao productDao, AsyncResponse asyncResponse) {

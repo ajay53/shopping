@@ -15,12 +15,10 @@ import java.util.List;
 public class ProductDetailViewModel extends AndroidViewModel {
 
     private final ProductRepository repository;
-    private final LiveData<List<Product>> allProducts;
 
     public ProductDetailViewModel(@NonNull Application application) {
         super(application);
         repository = new ProductRepository(application);
-        allProducts = repository.getAll();
     }
 
     public void insert(Product product) {
@@ -29,9 +27,5 @@ public class ProductDetailViewModel extends AndroidViewModel {
 
     public void get(int id, AsyncResponse asyncResponse) {
         repository.get(id, asyncResponse);
-    }
-
-    public LiveData<List<Product>> getAll() {
-        return allProducts;
     }
 }

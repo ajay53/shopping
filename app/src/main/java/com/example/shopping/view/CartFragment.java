@@ -28,6 +28,7 @@ import java.util.List;
 public class CartFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "CartFragment";
 
+    CartViewModel viewModel = null;
     private RecyclerView recyclerView = null;
     private ProductRecyclerViewAdapter recyclerViewAdapter = null;
     private Context context = null;
@@ -56,7 +57,7 @@ public class CartFragment extends Fragment implements View.OnClickListener {
         btnBuyAll.setOnClickListener(this);
         tvRemoveAllFromCart.setOnClickListener(this);
 
-        CartViewModel viewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
         viewModel.getAll().observe(getViewLifecycleOwner(), products -> {
             recyclerViewAdapter.notifyDataSetChanged();
@@ -80,13 +81,13 @@ public class CartFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Log.d(TAG, "onClick: ");
-        
+
         int id = v.getId();
 
         if (id == R.id.btnBuyAll) {
-
+            viewModel.deleteAll();
         } else if (id == R.id.tvRemoveAllFromCart) {
-
+            viewModel.deleteAll();
         }
     }
 }

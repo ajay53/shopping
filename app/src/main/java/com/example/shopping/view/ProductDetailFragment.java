@@ -49,11 +49,6 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         context = requireContext();
         viewModel = new ViewModelProvider(this).get(ProductDetailViewModel.class);
 
-        viewModel.getAll().observe(getViewLifecycleOwner(), products -> {
-            Toast.makeText(context, "all Products Changes", Toast.LENGTH_SHORT).show();
-            Toast.makeText(context, "all Products Changes", Toast.LENGTH_SHORT).show();
-        });
-
         Button btnAddToCart = view.findViewById(R.id.btnAddToCart);
         Button btnAddToCart2 = view.findViewById(R.id.btnAddToCart2);
         btnAddToCart.setOnClickListener(this);
@@ -69,7 +64,6 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         if (id == R.id.btnAddToCart) {
             //check for already inCart item
             viewModel.get(product.getId(), this);
-            Toast.makeText(context, "Item already in Cart", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.btnAddToCart2) {
             product.setPurchased(true);
             viewModel.insert(product);
@@ -85,7 +79,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         if (product != null) {
             Util.showSnackBar(this.requireActivity(), "Item already in Cart");
         } else {
-            viewModel.insert(product);
+            viewModel.insert(this.product);
         }
     }
 }
