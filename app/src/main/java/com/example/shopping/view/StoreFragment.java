@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,14 +25,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class StoreFragment extends Fragment implements ProductRecyclerViewAdapter.OnItemCLickListener {
+public class StoreFragment extends Fragment implements ProductRecyclerViewAdapter.OnItemCLickListener, View.OnClickListener {
 
     private static final String TAG = "StoreFragment";
 
     private RecyclerView recyclerView;
     private ProductRecyclerViewAdapter recyclerViewAdapter;
     private StoreViewModel viewModel;
+    FragmentActivity fragmentActivity;
     private Context context;
+
+//    String[] categoryArray;
 
     public StoreFragment() {
     }
@@ -49,9 +54,21 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
     private void init(View root) {
         Log.d(TAG, "init: ");
 
+        fragmentActivity = this.requireActivity();
         context = getContext();
         recyclerView = root.findViewById(R.id.rvProduct);
         viewModel = new ViewModelProvider(this).get(StoreViewModel.class);
+
+        Button btn = root.findViewById(R.id.btn);
+        btn.setOnClickListener(this);
+
+//        String[] categoryArray = context.getResources().getStringArray(R.array.categoryArray);
+
+//        Spinner spnCategory = root.findViewById(R.id.spnCategory);
+//        ArrayAdapter<String> categoryArrayAdapter = new ArrayAdapter<>(fragmentActivity, android.R.layout.simple_spinner_item, categoryArray);
+//        categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spnCategory.setOnItemSelectedListener(spinnerAdapterListener);
+//        spnCategory.setAdapter(categoryArrayAdapter);
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
             recyclerViewAdapter.notifyDataSetChanged();
@@ -77,10 +94,34 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
         Product product = Objects.requireNonNull(viewModel.getProducts().getValue()).get(position);
 
         Bundle bundle = new Bundle();
-//        bundle.putParcelable("product", product);
         bundle.putSerializable("product", product);
 
-        NavController navController = Navigation.findNavController(this.requireActivity(), R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(fragmentActivity, R.id.nav_host_fragment);
         navController.navigate(R.id.nav_product_detail, bundle);
     }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        if (id == R.id.btn) {
+            viewModel.getProductsByCategoryApi("jewelery");
+        }
+    }
+
+//    AdapterView.OnItemSelectedListener spinnerAdapterListener = new AdapterView.OnItemSelectedListener() {
+//        @Override
+//        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//            int viewId = parent.getId();
+//
+//            if (viewId == R.id.spnCategory) {
+//                Util.showSnackBar(fragmentActivity, "spinner");
+//            }
+//        }
+//
+//        @Override
+//        public void onNothingSelected(AdapterView<?> parent) {
+//
+//        }
+//    };
 }
