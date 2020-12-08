@@ -19,15 +19,16 @@
             android:id="@+id/imgProduct"
             android:layout_width="100dp"
             android:layout_height="60dp"
+            android:layout_centerVertical="true"
             android:layout_margin="5dp"
-            android:layout_centerVertical="true" />
+            android:contentDescription="@string/productImage" />
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/imgProduct"
             android:layout_marginBottom="10dp"
+            android:layout_toEndOf="@+id/imgProduct"
             android:paddingTop="10dp"
             android:textAppearance="?attr/textAppearanceListItem" />
 
@@ -36,8 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
-            android:layout_toEndOf="@+id/imgProduct"
             android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/imgProduct"
             android:paddingBottom="10dp"
             android:textAppearance="?attr/textAppearanceListItem" />
 

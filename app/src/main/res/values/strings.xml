@@ -18,4 +18,5 @@
     <string name="tvBuy">Buy</string>
     <string name="tvBuyAll">Buy All</string>
     <string name="tvRemoveAllFromCart">Remove All From Cart</string>
+    <string name="productImage">Product Image</string>
 </resources>

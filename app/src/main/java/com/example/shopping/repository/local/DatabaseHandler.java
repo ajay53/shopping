@@ -30,7 +30,7 @@ public abstract class DatabaseHandler extends RoomDatabase {
         return databaseInstance;
     }
 
-    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
+    private static final RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -40,7 +40,7 @@ public abstract class DatabaseHandler extends RoomDatabase {
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
 
-        private ProductDao productDao;
+        private final ProductDao productDao;
 
         public PopulateDbAsyncTask(DatabaseHandler handler) {
             productDao = handler.productDao();

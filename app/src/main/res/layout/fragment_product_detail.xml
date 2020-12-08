@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="product"
             type="com.example.shopping.model.Product" />
+
         <import type="com.example.shopping.utility.Util" />
     </data>
 
@@ -15,7 +17,7 @@
 
         <LinearLayout xmlns:card_view="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
@@ -35,7 +37,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/text_margin"
                         android:text="@{product.title}"
-                        android:textAppearance="?attr/textAppearanceListItem" />
+                        android:textAppearance="?attr/textAppearanceListItem"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/imgProduct"
@@ -44,6 +47,7 @@
                         android:layout_below="@+id/tvTitle"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/text_margin"
+                        android:contentDescription="@string/productImage"
                         app:imageUrl="@{product.url}" />
 
                     <TextView

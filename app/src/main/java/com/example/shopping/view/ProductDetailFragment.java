@@ -17,9 +17,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.shopping.R;
 import com.example.shopping.databinding.FragmentProductDetailBinding;
 import com.example.shopping.model.Product;
+import com.example.shopping.utility.AsyncResponse;
+import com.example.shopping.utility.Util;
 import com.example.shopping.viewmodel.ProductDetailViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
-public class ProductDetailFragment extends Fragment implements View.OnClickListener {
+public class ProductDetailFragment extends Fragment implements View.OnClickListener, AsyncResponse {
     private static final String TAG = "ProductDetailFragment";
 
     private Context context = null;
@@ -63,14 +66,26 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
         int id = v.getId();
 
-        if (id == R.id.btnAddToCart){
+        if (id == R.id.btnAddToCart) {
             //check for already inCart item
-
+            viewModel.get(product.getId(), this);
             Toast.makeText(context, "Item already in Cart", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.btnAddToCart2){
+        } else if (id == R.id.btnAddToCart2) {
             product.setPurchased(true);
             viewModel.insert(product);
         }
+    }
 
+    @Override
+    public void onProcessFinish(Object output) {
+        Log.d(TAG, "onProcessFinish: ");
+
+        Product product = (Product) output;
+
+        if (product != null) {
+            Util.showSnackBar(this.requireActivity(), "Item already in Cart");
+        } else {
+            viewModel.insert(product);
+        }
     }
 }
