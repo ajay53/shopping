@@ -7,21 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopping.R;
 import com.example.shopping.adapter.ProductRecyclerViewAdapter;
+import com.example.shopping.databinding.ProductCardBinding;
 import com.example.shopping.model.Product;
 import com.example.shopping.viewmodel.StoreViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,11 +29,15 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
 
     private static final String TAG = "StoreFragment";
 
-    private RecyclerView recyclerView;
+    //    private RecyclerView recyclerView;
     private ProductRecyclerViewAdapter recyclerViewAdapter;
     private StoreViewModel viewModel;
-    FragmentActivity fragmentActivity;
+    private FragmentActivity fragmentActivity;
     private Context context;
+    private View root;
+    Product product;
+
+    private LinearLayout llProducts;
 
 //    String[] categoryArray;
 
@@ -43,11 +47,11 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_store, container, false);
+        root = inflater.inflate(R.layout.fragment_store, container, false);
 
         init(root);
 
-        setRecyclerView(new ArrayList<>());
+//        setRecyclerView(new ArrayList<>());
         return root;
     }
 
@@ -56,9 +60,10 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
 
         fragmentActivity = this.requireActivity();
         context = getContext();
-        recyclerView = root.findViewById(R.id.rvProduct);
+//        recyclerView = root.findViewById(R.id.rvProduct);
         viewModel = new ViewModelProvider(this).get(StoreViewModel.class);
 
+        llProducts = root.findViewById(R.id.llProducts);
         Button btn = root.findViewById(R.id.btn);
         btn.setOnClickListener(this);
 
@@ -71,23 +76,62 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
 //        spnCategory.setAdapter(categoryArrayAdapter);
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
-            recyclerViewAdapter.notifyDataSetChanged();
-            setRecyclerView(products);
+//            recyclerViewAdapter.notifyDataSetChanged();
+//            setRecyclerView(products);
+            setProductGrid(products);
         });
 
         viewModel.getProductsApi();
     }
 
-    private void setRecyclerView(List<Product> products) {
+    /*private void setRecyclerView(List<Product> products) {
         Log.d(TAG, "setRecyclerView: ");
 
         recyclerViewAdapter = new ProductRecyclerViewAdapter(context, products, this);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }*/
+
+    private void setProductGrid(List<Product> products) {
+        LinearLayout ll;
+
+        ProductCardBinding binding;
+        LinearLayout.LayoutParams rootLayoutParams;
+        LinearLayout.LayoutParams llLayoutParams;
+
+        for (int productCounter = 0; productCounter < products.size() / 2; productCounter += 2) {
+            //creating linearLayout for each row(2 products)
+            ll = new LinearLayout(context);
+            ll.setOrientation(LinearLayout.HORIZONTAL);
+            llLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2);
+            llLayoutParams.setMargins(0, 0, 0, 20);
+            ll.setLayoutParams(llLayoutParams);
+
+            //adding 1st product in a row in ll
+            product = products.get(productCounter);
+            binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.product_card, null, false);
+            binding.setProduct(product);
+            rootLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+            rootLayoutParams.setMargins(0, 0, 10, 0);
+            binding.getRoot().setLayoutParams(rootLayoutParams);
+            ll.addView(binding.getRoot());
+
+            //adding 12nd product in a row in ll
+            product = products.get(productCounter + 1);
+            binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.product_card, null, false);
+            binding.setProduct(product);
+            rootLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+            rootLayoutParams.setMargins(10, 0, 0, 0);
+            binding.getRoot().setLayoutParams(rootLayoutParams);
+            ll.addView(binding.getRoot());
+
+            //adding ll(1 row) in vertical linearLayout
+            llProducts.addView(ll);
+        }
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onProductClick(int position) {
         Log.d(TAG, "onItemClick: ");
 
         Log.d(TAG, "onItemClick: ");

@@ -74,11 +74,11 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
         @Override
         public void onClick(View v) {
-            onItemCLickListener.onItemClick(getAdapterPosition());
+            onItemCLickListener.onProductClick(getAdapterPosition());
         }
     }
 
     public interface OnItemCLickListener {
-        void onItemClick(int position);
+        void onProductClick(int position);
     }
 }

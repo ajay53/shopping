@@ -1,8 +1,13 @@
 package com.example.shopping.model;
 
+import android.app.Activity;
+import android.util.Log;
+import android.widget.Button;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.shopping.utility.Util;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -17,7 +22,8 @@ public class Product implements Serializable {
     private String description;
     @SerializedName("image")
     private String url;
-    private boolean isPurchased;
+    private transient boolean isPurchased;
+    private transient boolean isFavorite;
 
     public Product(int id, String title, double price, String description, String url) {
         this.id = id;
@@ -73,5 +79,13 @@ public class Product implements Serializable {
 
     public void setPurchased(boolean purchased) {
         isPurchased = purchased;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

@@ -19,4 +19,6 @@
     <string name="tvBuyAll">Buy All</string>
     <string name="tvRemoveAllFromCart">Remove All From Cart</string>
     <string name="productImage">Product Image</string>
+
+    <string name="isFavorite">Is Favorite</string>
 </resources>
