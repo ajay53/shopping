@@ -14,6 +14,9 @@ import java.util.List;
 @Dao
 public interface ProductDao {
 
+    @Query("select * from product where favorite = 1")
+    LiveData<List<Product>> getFavorites();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Product product);
 

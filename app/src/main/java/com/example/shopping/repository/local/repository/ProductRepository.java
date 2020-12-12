@@ -26,6 +26,10 @@ public class ProductRepository {
         return productDao.getAll();
     }
 
+    public LiveData<List<Product>> getFavorites() {
+        return productDao.getFavorites();
+    }
+
     public void insert(Product product) {
         new InsertProductAsyncTask(productDao).execute(product);
     }

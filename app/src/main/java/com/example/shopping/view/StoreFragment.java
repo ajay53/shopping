@@ -23,13 +23,14 @@ import com.example.shopping.adapter.ProductRecyclerViewAdapter;
 import com.example.shopping.databinding.ProductCardBinding;
 import com.example.shopping.model.Product;
 import com.example.shopping.utility.AsyncResponse;
+import com.example.shopping.utility.CustomOnClick;
 import com.example.shopping.utility.Util;
 import com.example.shopping.viewmodel.StoreViewModel;
 
 import java.util.List;
 import java.util.Objects;
 
-public class StoreFragment extends Fragment implements ProductRecyclerViewAdapter.OnItemCLickListener, View.OnClickListener, AsyncResponse {
+public class StoreFragment extends Fragment implements ProductRecyclerViewAdapter.OnItemCLickListener, View.OnClickListener, AsyncResponse, CustomOnClick {
 
     private static final String TAG = "StoreFragment";
 
@@ -113,10 +114,11 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
             product = products.get(productCounter);
             binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.product_card, null, false);
             binding.setProduct(product);
-            binding.setStore(this);
+            binding.setCustomClick(this);
             rootLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1);
             rootLayoutParams.setMargins(0, 0, 10, 0);
             productCard = binding.getRoot();
+            productCard.findViewById(R.id.imgIsFavorite).setVisibility(View.INVISIBLE);
             productCard.setLayoutParams(rootLayoutParams);
             ll.addView(productCard);
 
@@ -124,10 +126,11 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
             product = products.get(productCounter + 1);
             binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.product_card, null, false);
             binding.setProduct(product);
-            binding.setStore(this);
+            binding.setCustomClick(this);
             rootLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1);
             rootLayoutParams.setMargins(10, 0, 0, 0);
             productCard = binding.getRoot();
+            productCard.findViewById(R.id.imgIsFavorite).setVisibility(View.INVISIBLE);
             productCard.setLayoutParams(rootLayoutParams);
             ll.addView(productCard);
 
@@ -136,6 +139,7 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
         }
     }
 
+    @Override
     public void setCustomOnClickListener(View view, final Product product) {
         int id = view.getId();
 

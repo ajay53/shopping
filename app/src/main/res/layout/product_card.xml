@@ -9,10 +9,8 @@
             type="com.example.shopping.model.Product" />
 
         <variable
-            name="store"
-            type="com.example.shopping.view.StoreFragment" />
-
-        <import type="com.bumptech.glide.load.engine.Resource" />
+            name="customClick"
+            type="com.example.shopping.utility.CustomOnClick" />
 
         <import type="com.example.shopping.utility.Util" />
     </data>
@@ -20,7 +18,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{(view)->store.setCustomOnClickListener(view, product)}">
+        android:onClick="@{(view)->customClick.setCustomOnClickListener(view, product)}">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -46,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/isFavorite"
-                android:onClick="@{(view) -> store.setCustomOnClickListener(view, product)}"
-                android:src="@drawable/ic_not_favorite" />
+                android:onClick="@{(view) -> customClick.setCustomOnClickListener(view, product)}"
+                android:src="@drawable/ic_favorite" />
 
             <TextView
                 android:id="@+id/tvTitle"
