@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.example.shopping.utility.Util;
 import java.util.List;
 
 public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder> {
+    private static final String TAG = "ProductRecyclerViewAdap";
 
     private final OnItemCLickListener onItemCLickListener;
     private final Context context;
@@ -39,6 +41,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        Log.d(TAG, "onBindViewHolder: ");
 
         Glide.with(context)
                 .asBitmap()

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -24,23 +25,23 @@ import com.example.shopping.databinding.ProductCardBinding;
 import com.example.shopping.model.Product;
 import com.example.shopping.utility.AsyncResponse;
 import com.example.shopping.utility.CustomOnClick;
-import com.example.shopping.utility.Util;
 import com.example.shopping.viewmodel.StoreViewModel;
 
 import java.util.List;
 import java.util.Objects;
 
-public class StoreFragment extends Fragment implements ProductRecyclerViewAdapter.OnItemCLickListener, View.OnClickListener, AsyncResponse, CustomOnClick {
+public class StoreFragment extends Fragment implements View.OnClickListener, AsyncResponse, CustomOnClick {
 
     private static final String TAG = "StoreFragment";
 
     //    private RecyclerView recyclerView;
-    private ProductRecyclerViewAdapter recyclerViewAdapter;
+//    private ProductRecyclerViewAdapter recyclerViewAdapter;
     private StoreViewModel viewModel;
     private FragmentActivity fragmentActivity;
     private Context context;
     private View productCard;
     Product product;
+    ProgressBar progressBar;
 
     ImageView imgIsFavorite;
     private LinearLayout llProducts;
@@ -55,7 +56,6 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
         super.onCreate(savedInstanceState);
 
         init();
-
     }
 
     @Override
@@ -64,8 +64,6 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
         View root = inflater.inflate(R.layout.fragment_store, container, false);
 
         initializeViews(root);
-
-//        setRecyclerView(new ArrayList<>());
         return root;
     }
 
@@ -74,27 +72,23 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
 
         fragmentActivity = this.requireActivity();
         context = getContext();
-
-//        recyclerView = root.findViewById(R.id.rvProduct);
         viewModel = new ViewModelProvider(this).get(StoreViewModel.class);
-
         viewModel.getProductsApi();
     }
 
     private void initializeViews(View root) {
         llProducts = root.findViewById(R.id.llProducts);
+        progressBar = root.findViewById(R.id.progressBar);
         Button btn = root.findViewById(R.id.btn);
         btn.setOnClickListener(this);
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
-//            recyclerViewAdapter.notifyDataSetChanged();
-//            setRecyclerView(products);
-            setProductGrid(products);
-
+            displayProducts(products);
+            progressBar.setVisibility(View.INVISIBLE);
         });
     }
 
-    private void setProductGrid(List<Product> products) {
+    private void displayProducts(List<Product> products) {
         LinearLayout ll;
 
         ProductCardBinding binding;
@@ -182,22 +176,6 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
         }
     }
 
-    //recycler view item click
-    //not in use
-    @Override
-    public void onProductClick(int position) {
-        Log.d(TAG, "onItemClick: ");
-
-        Log.d(TAG, "onItemClick: ");
-        Product product = Objects.requireNonNull(viewModel.getProducts().getValue()).get(position);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("product", product);
-
-        NavController navController = Navigation.findNavController(fragmentActivity, R.id.nav_host_fragment);
-        navController.navigate(R.id.nav_product_detail, bundle);
-    }
-
     //normal onClick
     //not in use
     @Override
@@ -215,14 +193,6 @@ public class StoreFragment extends Fragment implements ProductRecyclerViewAdapte
             navController.navigate(R.id.nav_product_detail, bundle);
         }
     }
-
-    /*private void setRecyclerView(List<Product> products) {
-        Log.d(TAG, "setRecyclerView: ");
-
-        recyclerViewAdapter = new ProductRecyclerViewAdapter(context, products, this);
-        recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-    }*/
 
     /*private void setSpnCategory() {
         String[] categoryArray = context.getResources().getStringArray(R.array.categoryArray);

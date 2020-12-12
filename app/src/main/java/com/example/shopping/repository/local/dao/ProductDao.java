@@ -26,8 +26,8 @@ public interface ProductDao {
     @Query("SELECT * from product WHERE id = :id")
     Product get(int id);
 
-    @Query("Select * from product")
-    LiveData<List<Product>> getAll();
+    @Query("Select * from product where inCart = 1")
+    LiveData<List<Product>> getAllInCart();
 
     //raw query must have non-void return type
 //    @RawQuery

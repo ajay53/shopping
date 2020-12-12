@@ -50,9 +50,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         viewModel = new ViewModelProvider(this).get(ProductDetailViewModel.class);
 
         Button btnAddToCart = view.findViewById(R.id.btnAddToCart);
-        Button btnAddToCart2 = view.findViewById(R.id.btnAddToCart2);
         btnAddToCart.setOnClickListener(this);
-        btnAddToCart2.setOnClickListener(this);
     }
 
     @Override
@@ -64,9 +62,6 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         if (id == R.id.btnAddToCart) {
             //check for already inCart item
             viewModel.get(product.getId(), this);
-        } else if (id == R.id.btnAddToCart2) {
-//            product.setPurchased(true);
-            viewModel.insert(product);
         }
     }
 
@@ -76,9 +71,10 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
         Product product = (Product) output;
 
-        if (product != null) {
+        if (product != null && product.isInCart()) {
             Util.showSnackBar(this.requireActivity(), "Item already in Cart");
         } else {
+            this.product.setInCart(true);
             viewModel.insert(this.product);
         }
     }

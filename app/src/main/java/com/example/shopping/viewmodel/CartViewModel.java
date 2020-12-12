@@ -13,17 +13,17 @@ import java.util.List;
 
 public class CartViewModel extends AndroidViewModel {
 
-    private final LiveData<List<Product>> allProducts;
+    private final LiveData<List<Product>> allInCart;
     ProductRepository repository;
 
     public CartViewModel(@NonNull Application application) {
         super(application);
         repository = new ProductRepository(application);
-        allProducts = repository.getAll();
+        allInCart = repository.getAllInCart();
     }
 
-    public LiveData<List<Product>> getAll() {
-        return allProducts;
+    public LiveData<List<Product>> getAllInCart() {
+        return allInCart;
     }
 
     public double getTotal(List<Product> products) {

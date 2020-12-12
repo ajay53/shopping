@@ -22,8 +22,8 @@ public class ProductRepository {
         productDao = handler.productDao();
     }
 
-    public LiveData<List<Product>> getAll() {
-        return productDao.getAll();
+    public LiveData<List<Product>> getAllInCart() {
+        return productDao.getAllInCart();
     }
 
     public LiveData<List<Product>> getFavorites() {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -33,6 +34,7 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
     private Context context;
     private View productCard;
     Product product;
+    ProgressBar progressBar;
 
     ImageView imgIsFavorite;
     private LinearLayout llProducts;
@@ -48,11 +50,9 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.fragment_store, container, false);
-
         initializeViews(root);
-
-//        setRecyclerView(new ArrayList<>());
         return root;
     }
 
@@ -61,21 +61,20 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
 
         fragmentActivity = this.requireActivity();
         context = getContext();
-
-//        recyclerView = root.findViewById(R.id.rvProduct);
         viewModel = new ViewModelProvider(this).get(FavoritesViewModel.class);
-
     }
 
     private void initializeViews(View root) {
         llProducts = root.findViewById(R.id.llProducts);
+        progressBar = root.findViewById(R.id.progressBar);
 
         viewModel.getFavorites().observe(getViewLifecycleOwner(), products -> {
-            setProductGrid(products);
+            displayProducts(products);
+            progressBar.setVisibility(View.INVISIBLE);
         });
     }
 
-    private void setProductGrid(List<Product> products) {
+    private void displayProducts(List<Product> products) {
         LinearLayout ll;
 
         ProductCardBinding binding;
@@ -95,7 +94,6 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
             product = products.get(productCounter);
             binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.product_card, null, false);
             binding.setProduct(product);
-//            binding.setStore(this);
             binding.setCustomClick(this);
             rootLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1);
             rootLayoutParams.setMargins(0, 0, 10, 0);
@@ -109,7 +107,6 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
                 product = products.get(productCounter + 1);
                 binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.product_card, null, false);
                 binding.setProduct(product);
-//            binding.setStore(this);
                 binding.setCustomClick(this);
                 rootLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1);
                 rootLayoutParams.setMargins(10, 0, 0, 0);
@@ -134,12 +131,9 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
             NavController navController = Navigation.findNavController(fragmentActivity, R.id.nav_host_fragment);
             navController.navigate(R.id.nav_product_detail, bundle);
         } else if (id == view.findViewById(R.id.imgIsFavorite).getId()) {
-
             imgIsFavorite = view.findViewById(R.id.imgIsFavorite);
             this.product = product;
             Log.d(TAG, "setCustomOnClick: imgIsFavorite Id: " + id + " Product: " + product.toString());
-
-//            viewModel.get(product.getId(), this);
         }
     }
 }
