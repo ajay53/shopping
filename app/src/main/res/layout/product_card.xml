@@ -11,15 +11,21 @@
         <variable
             name="store"
             type="com.example.shopping.view.StoreFragment" />
+
+        <import type="com.bumptech.glide.load.engine.Resource" />
+
+        <import type="com.example.shopping.utility.Util" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{(view)->store.setCustomOnClickListener(view, product)}">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp">
 
             <ImageView
                 android:id="@+id/imgProduct"
@@ -35,12 +41,13 @@
                 app:imageUrl="@{product.url}" />
 
             <ImageView
-                android:id="@+id/imgFavorite"
+                android:id="@+id/imgIsFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/isFavorite"
-                android:src="@drawable/ic_shopping_cart" />
+                android:onClick="@{(view) -> store.setCustomOnClickListener(view, product)}"
+                android:src="@drawable/ic_not_favorite" />
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -49,9 +56,18 @@
                 android:layout_below="@+id/imgProduct"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_horizontal"
                 android:text="@{product.title}" />
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTitle"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
+                android:text="@{Util.getPriceFormattedString(product.price)}" />
 
         </RelativeLayout>
 

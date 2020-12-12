@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.example.shopping.model.Product;
 import com.example.shopping.repository.local.DatabaseHandler;
@@ -39,6 +40,10 @@ public class ProductRepository {
 
     public void get(int id, AsyncResponse asyncResponse) {
         new GetProductAsyncTask(productDao, asyncResponse).execute(id);
+    }
+
+    public void runDynamicQuery(String queryString) {
+        new RunDynamicQuery(productDao).execute(queryString);
     }
 
     private static class InsertProductAsyncTask extends AsyncTask<Product, Void, Void> {
@@ -105,7 +110,23 @@ public class ProductRepository {
         protected void onPostExecute(Product product) {
             super.onPostExecute(product);
 
-            asyncResponse.onProcessFinish(product);
+            asyncResponse.onAsyncProcessFinish(product);
+        }
+    }
+
+    private static class RunDynamicQuery extends AsyncTask<String, Void, Void> {
+
+        private final ProductDao productDao;
+
+        public RunDynamicQuery(ProductDao productDao) {
+            this.productDao = productDao;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            SimpleSQLiteQuery sqLiteQuery = new SimpleSQLiteQuery(strings[0]);
+//            productDao.runDynamicQuery(sqLiteQuery);
+            return null;
         }
     }
 }

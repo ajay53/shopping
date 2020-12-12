@@ -65,13 +65,13 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
             //check for already inCart item
             viewModel.get(product.getId(), this);
         } else if (id == R.id.btnAddToCart2) {
-            product.setPurchased(true);
+//            product.setPurchased(true);
             viewModel.insert(product);
         }
     }
 
     @Override
-    public void onProcessFinish(Object output) {
+    public void onAsyncProcessFinish(Object output) {
         Log.d(TAG, "onProcessFinish: ");
 
         Product product = (Product) output;

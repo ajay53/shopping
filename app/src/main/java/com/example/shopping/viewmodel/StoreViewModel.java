@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.shopping.model.Product;
 import com.example.shopping.repository.api.WebServiceClient;
+import com.example.shopping.repository.local.repository.ProductRepository;
+import com.example.shopping.utility.AsyncResponse;
 
 import java.util.List;
 
@@ -21,15 +23,29 @@ public class StoreViewModel extends AndroidViewModel {
 
     private static final String TAG = "StoreViewModel";
 
+    private final ProductRepository repository;
     private final MutableLiveData<List<Product>> mProducts;
 
     public StoreViewModel(Application application) {
         super(application);
         mProducts = new MutableLiveData<>();
+        repository = new ProductRepository(application);
     }
 
     public LiveData<List<Product>> getProducts() {
         return mProducts;
+    }
+
+    public void insert(Product product) {
+        repository.insert(product);
+    }
+
+    public void get(int id, AsyncResponse asyncResponse) {
+        repository.get(id, asyncResponse);
+    }
+
+    public void runDynamicQuery(String queryString) {
+        repository.runDynamicQuery(queryString);
     }
 
     public void getProductsApi() {

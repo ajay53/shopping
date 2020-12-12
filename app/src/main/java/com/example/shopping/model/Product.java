@@ -1,13 +1,10 @@
 package com.example.shopping.model;
 
-import android.app.Activity;
-import android.util.Log;
-import android.widget.Button;
-
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.example.shopping.utility.Util;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -22,15 +19,23 @@ public class Product implements Serializable {
     private String description;
     @SerializedName("image")
     private String url;
-    private transient boolean isPurchased;
-    private transient boolean isFavorite;
 
-    public Product(int id, String title, double price, String description, String url) {
+    @Expose(serialize = false, deserialize = false)
+    private boolean favorite;
+    @Expose(serialize = false, deserialize = false)
+    private boolean inCart;
+    @Expose(serialize = false, deserialize = false)
+    private boolean purchased;
+
+    public Product(int id, String title, double price, String description, String url, boolean favorite, boolean inCart, boolean purchased) {
         this.id = id;
         this.title = title;
         this.price = price;
         this.description = description;
         this.url = url;
+        this.favorite = favorite;
+        this.inCart = inCart;
+        this.purchased = purchased;
     }
 
     public int getId() {
@@ -73,19 +78,33 @@ public class Product implements Serializable {
         this.url = url;
     }
 
-    public boolean isPurchased() {
-        return isPurchased;
-    }
-
-    public void setPurchased(boolean purchased) {
-        isPurchased = purchased;
-    }
-
     public boolean isFavorite() {
-        return isFavorite;
+        return favorite;
     }
 
     public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
+        this.favorite = favorite;
+    }
+
+    public boolean isInCart() {
+        return inCart;
+    }
+
+    public void setInCart(boolean inCart) {
+        this.inCart = inCart;
+    }
+
+    public boolean isPurchased() {
+        return purchased;
+    }
+
+    public void setPurchased(boolean purchased) {
+        this.purchased = purchased;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "ProductId: " + getId();
     }
 }
