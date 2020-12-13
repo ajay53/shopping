@@ -83,6 +83,7 @@ public class StoreFragment extends Fragment implements View.OnClickListener, Asy
         btn.setOnClickListener(this);
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+            llProducts.removeAllViews();
             displayProducts(products);
             progressBar.setVisibility(View.INVISIBLE);
         });
@@ -117,16 +118,18 @@ public class StoreFragment extends Fragment implements View.OnClickListener, Asy
             ll.addView(productCard);
 
             //adding 2nd product in a row in ll
-            product = products.get(productCounter + 1);
-            binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.product_card, null, false);
-            binding.setProduct(product);
-            binding.setCustomClick(this);
-            rootLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-            rootLayoutParams.setMargins(10, 0, 0, 0);
-            productCard = binding.getRoot();
-            productCard.findViewById(R.id.imgIsFavorite).setVisibility(View.INVISIBLE);
-            productCard.setLayoutParams(rootLayoutParams);
-            ll.addView(productCard);
+            if (productCounter + 1 < products.size()) {
+                product = products.get(productCounter + 1);
+                binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.product_card, null, false);
+                binding.setProduct(product);
+                binding.setCustomClick(this);
+                rootLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+                rootLayoutParams.setMargins(10, 0, 0, 0);
+                productCard = binding.getRoot();
+                productCard.findViewById(R.id.imgIsFavorite).setVisibility(View.INVISIBLE);
+                productCard.setLayoutParams(rootLayoutParams);
+                ll.addView(productCard);
+            }
 
             //adding ll(1 row) in vertical linearLayout
             llProducts.addView(ll);

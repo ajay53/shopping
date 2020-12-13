@@ -27,5 +27,7 @@ public class FavoritesViewModel extends AndroidViewModel {
         return mAllFavorites;
     }
 
-
+    public void insert(Product product) {
+        repository.insert(product);
+    }
 }

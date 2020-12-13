@@ -67,6 +67,7 @@ public class StoreViewModel extends AndroidViewModel {
             @Override
             public void onFailure(@NonNull Call<List<Product>> call, @NonNull Throwable t) {
                 Log.e(TAG, "onFailure: " + t.getMessage());
+                getProductsApi();
             }
         });
     }

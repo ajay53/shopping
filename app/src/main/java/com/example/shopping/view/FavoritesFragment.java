@@ -51,7 +51,7 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_store, container, false);
+        View root = inflater.inflate(R.layout.fragment_favorites, container, false);
         initializeViews(root);
         return root;
     }
@@ -69,6 +69,7 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
         progressBar = root.findViewById(R.id.progressBar);
 
         viewModel.getFavorites().observe(getViewLifecycleOwner(), products -> {
+            llProducts.removeAllViews();
             displayProducts(products);
             progressBar.setVisibility(View.INVISIBLE);
         });
@@ -131,8 +132,11 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
             NavController navController = Navigation.findNavController(fragmentActivity, R.id.nav_host_fragment);
             navController.navigate(R.id.nav_product_detail, bundle);
         } else if (id == view.findViewById(R.id.imgIsFavorite).getId()) {
-            imgIsFavorite = view.findViewById(R.id.imgIsFavorite);
-            this.product = product;
+//            imgIsFavorite = view.findViewById(R.id.imgIsFavorite);
+            product.setFavorite(false);
+            viewModel.insert(product);
+
+//            imgIsFavorite.setImageResource(R.drawable.ic_not_favorite);
             Log.d(TAG, "setCustomOnClick: imgIsFavorite Id: " + id + " Product: " + product.toString());
         }
     }
