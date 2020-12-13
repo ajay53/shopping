@@ -20,4 +20,5 @@
     <string name="productImage">Product Image</string>
 
     <string name="isFavorite">Is Favorite</string>
+    <string name="noFavorites">No Favorites</string>
 </resources>

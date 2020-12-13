@@ -6,9 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -33,18 +33,17 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
     private FragmentActivity fragmentActivity;
     private Context context;
     private View productCard;
-    Product product;
-    ProgressBar progressBar;
+    private Product product;
+    private ProgressBar progressBar;
 
-    ImageView imgIsFavorite;
     private LinearLayout llProducts;
+    private TextView tvNoFavorites;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         init();
-
     }
 
     @Override
@@ -67,9 +66,11 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
     private void initializeViews(View root) {
         llProducts = root.findViewById(R.id.llProducts);
         progressBar = root.findViewById(R.id.progressBar);
+        tvNoFavorites = root.findViewById(R.id.tvNoFavorites);
 
         viewModel.getFavorites().observe(getViewLifecycleOwner(), products -> {
             llProducts.removeAllViews();
+            tvNoFavorites.setVisibility(products.size() == 0 ? View.VISIBLE : View.INVISIBLE);
             displayProducts(products);
             progressBar.setVisibility(View.INVISIBLE);
         });
@@ -132,11 +133,8 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
             NavController navController = Navigation.findNavController(fragmentActivity, R.id.nav_host_fragment);
             navController.navigate(R.id.nav_product_detail, bundle);
         } else if (id == view.findViewById(R.id.imgIsFavorite).getId()) {
-//            imgIsFavorite = view.findViewById(R.id.imgIsFavorite);
             product.setFavorite(false);
             viewModel.insert(product);
-
-//            imgIsFavorite.setImageResource(R.drawable.ic_not_favorite);
             Log.d(TAG, "setCustomOnClick: imgIsFavorite Id: " + id + " Product: " + product.toString());
         }
     }
