@@ -1,5 +1,5 @@
 # shopping
-Basic android app, listing all products and adding and retrieving to/from cart.
+Online Shopping android app(reference: Amazon), listing all products and adding and retrieving to/from the cart.
 
 Libraries used(MVVM, Data Binding):
 -Gson
