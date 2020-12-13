@@ -10,9 +10,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_store">Store</string>
     <string name="menu_favorites">Favorites</string>
-
 
     <string name="tvAddToCart">Add To Cart</string>
     <string name="cartIsEmpty">Cart is Empty</string>

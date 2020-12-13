@@ -23,7 +23,7 @@
         android:layout_marginRight="16dp"
         android:paddingBottom="150dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".view.StoreFragment"
+        tools:context=".view.HomeFragment"
         tools:listitem="@layout/store_list_item" />
 
     <Button

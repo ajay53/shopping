@@ -20,23 +20,19 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.shopping.R;
-import com.example.shopping.adapter.ProductRecyclerViewAdapter;
 import com.example.shopping.databinding.ProductCardBinding;
 import com.example.shopping.model.Product;
 import com.example.shopping.utility.AsyncResponse;
 import com.example.shopping.utility.CustomOnClick;
-import com.example.shopping.viewmodel.StoreViewModel;
+import com.example.shopping.viewmodel.HomeViewModel;
 
 import java.util.List;
-import java.util.Objects;
 
-public class StoreFragment extends Fragment implements View.OnClickListener, AsyncResponse, CustomOnClick {
+public class HomeFragment extends Fragment implements View.OnClickListener, AsyncResponse, CustomOnClick {
 
-    private static final String TAG = "StoreFragment";
+    private static final String TAG = "HomeFragment";
 
-    //    private RecyclerView recyclerView;
-//    private ProductRecyclerViewAdapter recyclerViewAdapter;
-    private StoreViewModel viewModel;
+    private HomeViewModel viewModel;
     private FragmentActivity fragmentActivity;
     private Context context;
     private View productCard;
@@ -48,7 +44,7 @@ public class StoreFragment extends Fragment implements View.OnClickListener, Asy
 
 //    String[] categoryArray;
 
-    public StoreFragment() {
+    public HomeFragment() {
     }
 
     @Override
@@ -61,7 +57,7 @@ public class StoreFragment extends Fragment implements View.OnClickListener, Asy
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_store, container, false);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         initializeViews(root);
         return root;
@@ -72,15 +68,13 @@ public class StoreFragment extends Fragment implements View.OnClickListener, Asy
 
         fragmentActivity = this.requireActivity();
         context = getContext();
-        viewModel = new ViewModelProvider(this).get(StoreViewModel.class);
+        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         viewModel.getProductsApi();
     }
 
     private void initializeViews(View root) {
         llProducts = root.findViewById(R.id.llProducts);
         progressBar = root.findViewById(R.id.progressBar);
-        Button btn = root.findViewById(R.id.btn);
-        btn.setOnClickListener(this);
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
             llProducts.removeAllViews();
@@ -185,8 +179,8 @@ public class StoreFragment extends Fragment implements View.OnClickListener, Asy
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.btn) {
-            viewModel.getProductsByCategoryApi("jewelery");
+        if (id == 9999) {
+//            viewModel.getProductsByCategoryApi("jewelery");
         } else if (id == productCard.getId()) {
             v.getTag();
             Bundle bundle = new Bundle();

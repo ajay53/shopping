@@ -19,14 +19,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StoreViewModel extends AndroidViewModel {
+public class HomeViewModel extends AndroidViewModel {
 
-    private static final String TAG = "StoreViewModel";
+    private static final String TAG = "HomeViewModel";
 
     private final ProductRepository repository;
     private final MutableLiveData<List<Product>> mProducts;
 
-    public StoreViewModel(Application application) {
+    public HomeViewModel(Application application) {
         super(application);
         mProducts = new MutableLiveData<>();
         repository = new ProductRepository(application);
