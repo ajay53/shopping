@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.shopping.model.Product;
 import com.example.shopping.repository.local.repository.ProductRepository;
+import com.example.shopping.utility.AsyncResponse;
 
 import java.util.List;
 
@@ -25,6 +26,10 @@ public class FavoritesViewModel extends AndroidViewModel {
 
     public LiveData<List<Product>> getFavorites() {
         return mAllFavorites;
+    }
+
+    public void get(int id, AsyncResponse asyncResponse) {
+        repository.get(id, asyncResponse);
     }
 
     public void insert(Product product) {

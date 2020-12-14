@@ -106,9 +106,21 @@ public class CartFragment extends Fragment implements ProductRecyclerViewAdapter
         int id = v.getId();
 
         if (id == R.id.btnBuyAll) {
-            viewModel.deleteAll();
+//            viewModel.deleteAll();
+            Util.showSnackBar(fragmentActivity, "will impl later");
         } else if (id == R.id.tvRemoveAllFromCart) {
-            viewModel.deleteAll();
+            clearCart();
+
+        }
+    }
+
+    private void clearCart() {
+        List<Product> products = viewModel.getAllInCart().getValue();
+
+        for (Product product :
+                products) {
+            product.setInCart(false);
+            viewModel.insert(product);
         }
     }
 

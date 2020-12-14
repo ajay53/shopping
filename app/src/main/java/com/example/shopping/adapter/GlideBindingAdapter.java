@@ -15,7 +15,7 @@ public class GlideBindingAdapter {
 
         Context context = view.getContext();
 
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(url)
                 .placeholder(R.drawable.ic_menu_store)
                 .into(view);
@@ -27,15 +27,17 @@ public class GlideBindingAdapter {
         Context context = view.getContext();
 
         if (isFavorite) {
-            Glide.with(context)
-                    .load(R.drawable.ic_favorite)
+            GlideApp.with(context)
+                    .load(R.drawable.like)
                     .placeholder(R.drawable.ic_menu_store)
                     .into(view);
         } else {
-            Glide.with(context)
-                    .load(R.drawable.ic_not_favorite)
+            GlideApp.with(context)
+                    .load(R.drawable.unlike)
                     .placeholder(R.drawable.ic_menu_store)
                     .into(view);
         }
     }
 }
+
+

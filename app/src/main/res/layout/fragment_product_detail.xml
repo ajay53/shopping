@@ -75,8 +75,8 @@
 
                         <ImageView
                             android:id="@+id/imgIsFavorite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_toEndOf="@+id/tvPrice"
                             android:layout_weight="0.1"
                             android:contentDescription="@string/isFavorite"

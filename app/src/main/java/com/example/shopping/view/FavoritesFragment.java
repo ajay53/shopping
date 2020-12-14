@@ -21,12 +21,13 @@ import androidx.navigation.Navigation;
 import com.example.shopping.R;
 import com.example.shopping.databinding.ProductCardBinding;
 import com.example.shopping.model.Product;
+import com.example.shopping.utility.AsyncResponse;
 import com.example.shopping.utility.CustomOnClick;
 import com.example.shopping.viewmodel.FavoritesViewModel;
 
 import java.util.List;
 
-public class FavoritesFragment extends Fragment implements CustomOnClick {
+public class FavoritesFragment extends Fragment implements CustomOnClick, AsyncResponse {
     private static final String TAG = "FavoritesFragment";
 
     private FavoritesViewModel viewModel;
@@ -124,6 +125,8 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
 
     @Override
     public void setCustomOnClickListener(View view, Product product) {
+        Log.d(TAG, "setCustomOnClickListener: ");
+
         int id = view.getId();
 
         if (id == productCard.getId()) {
@@ -133,9 +136,20 @@ public class FavoritesFragment extends Fragment implements CustomOnClick {
             NavController navController = Navigation.findNavController(fragmentActivity, R.id.nav_host_fragment);
             navController.navigate(R.id.nav_product_detail, bundle);
         } else if (id == view.findViewById(R.id.imgIsFavorite).getId()) {
-            product.setFavorite(false);
-            viewModel.insert(product);
+//            product.setFavorite(false);
+//            this.product = product;
+            viewModel.get(product.getId(), this);
+//            viewModel.insert(product);
             Log.d(TAG, "setCustomOnClick: imgIsFavorite Id: " + id + " Product: " + product.toString());
         }
+    }
+
+    @Override
+    public void onAsyncProcessFinish(Object output) {
+        Log.d(TAG, "onAsyncProcessFinish: ");
+
+        Product product = (Product) output;
+        product.setFavorite(false);
+        viewModel.insert(product);
     }
 }

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.shopping.R;
@@ -21,16 +22,19 @@ import com.example.shopping.databinding.FragmentProductDetailBinding;
 import com.example.shopping.model.Product;
 import com.example.shopping.utility.AsyncResponse;
 import com.example.shopping.utility.CustomOnClick;
+import com.example.shopping.utility.Util;
 import com.example.shopping.viewmodel.ProductDetailViewModel;
 
 public class ProductDetailFragment extends Fragment implements View.OnClickListener, CustomOnClick, AsyncResponse {
     private static final String TAG = "ProductDetailFragment";
 
     private Context context = null;
+    private FragmentActivity fragmentActivity;
     private Product product = null;
     private ProductDetailViewModel viewModel;
     private ImageView imgIsFavorite;
     private boolean isSettingFavorite;
+    private boolean isAddingInCart;
     private FragmentProductDetailBinding binding;
     private ProgressBar progressBar;
 
@@ -54,12 +58,12 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
     private void init() {
         Log.d(TAG, "init: ");
 
+        fragmentActivity = requireActivity();
         context = requireContext();
         viewModel = new ViewModelProvider(this).get(ProductDetailViewModel.class);
 
         assert getArguments() != null;
         product = (Product) getArguments().getSerializable("product");
-        viewModel.get(product.getId(), this);
     }
 
     private void initializeViews(FragmentProductDetailBinding binding) {
@@ -69,6 +73,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         btnAddToCart.setOnClickListener(this);
 
         binding.setCustomClick(this);
+        viewModel.get(product.getId(), this);
     }
 
     @Override
@@ -79,6 +84,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
         if (id == R.id.btnAddToCart) {
             //check for already inCart item
+            isAddingInCart = true;
             viewModel.get(product.getId(), this);
         }
     }
@@ -105,22 +111,35 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
         Product product = (Product) output;
 
-        if (isSettingFavorite) {
-            if (product != null && product.isFavorite()) {
-
-                imgIsFavorite.setImageResource(R.drawable.ic_not_favorite);
-                product.setFavorite(false);
+        if (isSettingFavorite) {        //setting favorite
+            if (product != null) {
+                imgIsFavorite.setImageResource(product.isFavorite() ? R.drawable.unlike : R.drawable.like);
+                product.setFavorite(!product.isFavorite());
+                this.product = product;
                 viewModel.insert(product);
             } else {
-                imgIsFavorite.setImageResource(R.drawable.ic_favorite);
+                imgIsFavorite.setImageResource(R.drawable.like);
                 this.product.setFavorite(true);
                 viewModel.insert(this.product);
             }
-        } else if (!isSettingFavorite && product != null && product.isFavorite()) {
-            this.product = product;
-            binding.setProduct(product);
-            progressBar.setVisibility(View.INVISIBLE);
-        } else {
+            isSettingFavorite = false;
+        } else if (isAddingInCart) {      //setting in cart
+            if (product != null) {
+                if (product.isInCart()) {
+                    this.product = product;
+                    Util.showSnackBar(fragmentActivity, getString(R.string.itemAlreadyInCart));
+                } else {
+                    product.setInCart(true);
+                    this.product = product;
+                    viewModel.insert(product);
+                }
+            } else {
+                this.product.setInCart(true);
+                viewModel.insert(this.product);
+            }
+            isAddingInCart = false;
+        } else {                        //setting product on page load
+            this.product = product == null ? this.product : product;
             binding.setProduct(this.product);
             progressBar.setVisibility(View.INVISIBLE);
         }

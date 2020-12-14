@@ -40,12 +40,12 @@
 
             <ImageView
                 android:id="@+id/imgIsFavorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/isFavorite"
                 android:onClick="@{(view) -> customClick.setCustomOnClickListener(view, product)}"
-                android:src="@drawable/ic_favorite" />
+                android:src="@drawable/like" />
 
             <TextView
                 android:id="@+id/tvTitle"

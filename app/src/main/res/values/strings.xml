@@ -21,4 +21,8 @@
 
     <string name="isFavorite">Is Favorite</string>
     <string name="noFavorites">No Favorites</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="login">Login</string>
+    <string name="itemAlreadyInCart">Item Already in Cart</string>
 </resources>

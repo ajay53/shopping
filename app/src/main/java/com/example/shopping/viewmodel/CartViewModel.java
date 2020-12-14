@@ -26,6 +26,10 @@ public class CartViewModel extends AndroidViewModel {
         return allInCart;
     }
 
+    public void insert(Product product) {
+        repository.insert(product);
+    }
+
     public double getTotal(List<Product> products) {
         double totalPrice = 0.0;
         for (Product product :
@@ -35,7 +39,4 @@ public class CartViewModel extends AndroidViewModel {
         return totalPrice;
     }
 
-    public void deleteAll() {
-        repository.deleteAll();
-    }
 }
