@@ -8,6 +8,7 @@ Libraries used(MVVM, Data Binding):
 -Retrofit
 
 Implemented following functionalities.
+-Conditional login(displays login page only if user is not logged in)
 -Fetching products over api
 -adding product in cart by storing data in cache
 -setting product as favorite by storing data in cache
@@ -16,5 +17,4 @@ Implemented following functionalities.
 Have to implement
 -Fetch Products by categories(code for api is ready, ui part remaining)
 -Your Orders(Previously Bought Items)
--Login Screen
 -App Settings(only ui)
