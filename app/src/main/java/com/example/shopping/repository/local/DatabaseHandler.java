@@ -10,14 +10,18 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.shopping.model.Product;
+import com.example.shopping.model.User;
 import com.example.shopping.repository.local.dao.ProductDao;
+import com.example.shopping.repository.local.dao.UserDao;
 
-@Database(entities = {Product.class}, version = 1, exportSchema = false)
+@Database(entities = {Product.class, User.class}, version = 1, exportSchema = false)
 public abstract class DatabaseHandler extends RoomDatabase {
 
     private static DatabaseHandler databaseInstance;
 
     public abstract ProductDao productDao();
+
+    public abstract UserDao userDao();
 
     public static synchronized DatabaseHandler getInstance(Context context) {
         if (databaseInstance == null) {
@@ -41,9 +45,11 @@ public abstract class DatabaseHandler extends RoomDatabase {
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
 
         private final ProductDao productDao;
+        private final UserDao userDao;
 
         public PopulateDbAsyncTask(DatabaseHandler handler) {
             productDao = handler.productDao();
+            userDao = handler.userDao();
         }
 
         @Override
