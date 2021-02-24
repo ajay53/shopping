@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.DecimalFormat;
 
 public class Util {
+    private static final String TAG = "Util";
 
     public static String getPriceFormattedString(double price) {
         DecimalFormat df = new DecimalFormat("###,###,##0.00");
@@ -19,7 +20,7 @@ public class Util {
         return "Total: $ " + df.format(price);
     }
 
-    public static void showSnackBar(Activity activity, String message){
+    public static void showSnackBar(Activity activity, String message) {
         View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
     }

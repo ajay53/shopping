@@ -35,6 +35,8 @@ android {
 
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.wear:wear:1.1.0'
+    compileOnly 'com.google.android.wearable:wearable:2.8.1'
     def room_version = "2.2.6"
     def retrofit_version = "2.9.0"
     def gson_version = "2.8.6"

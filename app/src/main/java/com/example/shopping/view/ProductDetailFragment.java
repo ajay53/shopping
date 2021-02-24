@@ -2,6 +2,8 @@ package com.example.shopping.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +32,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
     private Context context = null;
     private FragmentActivity fragmentActivity;
-    private Product product = null;
+    private static Product product = null;
     private ProductDetailViewModel viewModel;
     private ImageView imgIsFavorite;
     private boolean isSettingFavorite;
@@ -98,7 +100,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
             isSettingFavorite = true;
             imgIsFavorite = view.findViewById(R.id.imgIsFavorite);
-            this.product = product;
+            ProductDetailFragment.product = product;
             Log.d(TAG, "setCustomOnClick: imgIsFavorite Id: " + id + " Product: " + product.toString());
 
             viewModel.get(product.getId(), this);
@@ -111,7 +113,42 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
         Product product = (Product) output;
 
-        if (isSettingFavorite) {        //setting favorite
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (isSettingFavorite) {        //setting favorite
+                if (product != null) {
+                    imgIsFavorite.setImageResource(product.isFavorite() ? R.drawable.unlike : R.drawable.like);
+                    product.setFavorite(!product.isFavorite());
+                    ProductDetailFragment.product = product;
+                    viewModel.insert(product);
+                } else {
+                    imgIsFavorite.setImageResource(R.drawable.like);
+                    ProductDetailFragment.product.setFavorite(true);
+                    viewModel.insert(ProductDetailFragment.product);
+                }
+                isSettingFavorite = false;
+            } else if (isAddingInCart) {      //setting in cart
+                if (product != null) {
+                    if (product.isInCart()) {
+                        ProductDetailFragment.product = product;
+                        Util.showSnackBar(fragmentActivity, getString(R.string.itemAlreadyInCart));
+                    } else {
+                        product.setInCart(true);
+                        ProductDetailFragment.product = product;
+                        viewModel.insert(product);
+                    }
+                } else {
+                    ProductDetailFragment.product.setInCart(true);
+                    viewModel.insert(ProductDetailFragment.product);
+                }
+                isAddingInCart = false;
+            } else {                        //setting product on page load
+                ProductDetailFragment.product = product == null ? ProductDetailFragment.product : product;
+                binding.setProduct(ProductDetailFragment.product);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        /*if (isSettingFavorite) {        //setting favorite
             if (product != null) {
                 imgIsFavorite.setImageResource(product.isFavorite() ? R.drawable.unlike : R.drawable.like);
                 product.setFavorite(!product.isFavorite());
@@ -142,6 +179,6 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
             this.product = product == null ? this.product : product;
             binding.setProduct(this.product);
             progressBar.setVisibility(View.INVISIBLE);
-        }
+        }*/
     }
 }
