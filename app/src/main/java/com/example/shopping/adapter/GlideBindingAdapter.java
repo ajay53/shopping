@@ -28,12 +28,12 @@ public class GlideBindingAdapter {
 
         if (isFavorite) {
             GlideApp.with(context)
-                    .load(R.drawable.like)
+                    .load(R.drawable.ic_favorite)
                     .placeholder(R.drawable.ic_menu_store)
                     .into(view);
         } else {
             GlideApp.with(context)
-                    .load(R.drawable.unlike)
+                    .load(R.drawable.ic_not_favorite)
                     .placeholder(R.drawable.ic_menu_store)
                     .into(view);
         }

@@ -14,6 +14,8 @@ import com.example.shopping.model.User;
 import com.example.shopping.utility.AsyncResponse;
 import com.example.shopping.utility.Constant;
 import com.example.shopping.viewmodel.MainViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
     private MainViewModel viewModel;
     public static SharedPreferences sharedPref;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +37,30 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     private void init() {
         Log.d(TAG, "init: ");
 
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-        //temp
-//        Intent intent = new Intent(this, NavigationActivity.class);
-//        startActivity(intent);
-//        finish();
-
+        mAuth = FirebaseAuth.getInstance();
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        //viewModel.getAll(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //firebase signed in status
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        Intent intent;
+        if (currentUser != null) {
+            intent = new Intent(this, NavigationActivity.class);
+        } else {
+            intent = new Intent(this, LoginActivity.class);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+
+        //offline login
+        /*
         String username = sharedPref.getString(Constant.USERNAME, "");
 
         Intent intent;
@@ -52,8 +71,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        finish();
-        //viewModel.getAll(this);
+        finish();*/
     }
 
     @Override

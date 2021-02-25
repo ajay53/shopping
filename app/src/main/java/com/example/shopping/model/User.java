@@ -9,15 +9,16 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "user")
 public class User extends BaseObservable {
 
-    @PrimaryKey
-    @NonNull
+
     private String username;
     private String password;
+    @PrimaryKey
+    @NonNull
     private String emailId;
     private String phoneNo;
     private String address;
 
-    public User(@NonNull String username, String password, String emailId, String phoneNo, String address) {
+    public User(String username, String password, @NonNull String emailId, String phoneNo, String address) {
         this.username = username;
         this.password = password;
         this.emailId = emailId;
@@ -25,13 +26,13 @@ public class User extends BaseObservable {
         this.address = address;
     }
 
-    @NonNull
+
     @Bindable
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(@NonNull String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -44,12 +45,13 @@ public class User extends BaseObservable {
         this.password = password;
     }
 
+    @NonNull
     @Bindable
     public String getEmailId() {
         return emailId;
     }
 
-    public void setEmailId(String emailId) {
+    public void setEmailId(@NonNull String emailId) {
         this.emailId = emailId;
     }
 

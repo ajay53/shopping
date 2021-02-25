@@ -27,6 +27,7 @@ import com.example.shopping.utility.Util;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class NavigationActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -97,10 +98,14 @@ public class NavigationActivity extends AppCompatActivity implements View.OnClic
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     //Yes button clicked
-                    SharedPreferences.Editor editor = MainActivity.sharedPref.edit();
+                    //firebase auth logout
+                    FirebaseAuth.getInstance().signOut();
+
+                    //setting shared preferences
+                    /*SharedPreferences.Editor editor = MainActivity.sharedPref.edit();
                     editor.putString(Constant.USERNAME, "");
                     editor.putString(Constant.PASSWORD, "");
-                    editor.apply();
+                    editor.apply();*/
 
                     Intent intent = new Intent(this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

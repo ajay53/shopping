@@ -45,7 +45,7 @@
                 android:layout_margin="10dp"
                 android:contentDescription="@string/isFavorite"
                 android:onClick="@{(view) -> customClick.setCustomOnClickListener(view, product)}"
-                android:src="@drawable/like" />
+                android:src="@drawable/ic_favorite" />
 
             <TextView
                 android:id="@+id/tvTitle"

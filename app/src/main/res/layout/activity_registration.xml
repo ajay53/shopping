@@ -25,13 +25,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/materialUsername"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvRegistration"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,6 +47,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/materialPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/materialUsername"
@@ -53,7 +55,7 @@
             android:layout_marginEnd="20dp"
             app:passwordToggleEnabled="true">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,13 +70,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/materialEmailId"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/materialPassword"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtEmailId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,13 +91,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/materialPhoneNo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/materialEmailId"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtPhoneNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -105,18 +109,18 @@
                 android:inputType="phone"
                 android:text="@={user.phoneNo}" />
 
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/materialAddress"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/materialPhoneNo"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,12 +136,13 @@
 
         <Button
             android:id="@+id/btnRegister"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/materialAddress"
-            android:layout_centerInParent="true"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
-            android:background="@color/colorViolet"
-            android:text="@string/register" />
+            android:layout_marginEnd="20dp"
+            android:text="@string/register"
+            app:cornerRadius="10dp" />
     </RelativeLayout>
 </layout>

@@ -116,12 +116,12 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         new Handler(Looper.getMainLooper()).post(() -> {
             if (isSettingFavorite) {        //setting favorite
                 if (product != null) {
-                    imgIsFavorite.setImageResource(product.isFavorite() ? R.drawable.unlike : R.drawable.like);
+                    imgIsFavorite.setImageResource(product.isFavorite() ? R.drawable.ic_not_favorite : R.drawable.ic_favorite);
                     product.setFavorite(!product.isFavorite());
                     ProductDetailFragment.product = product;
                     viewModel.insert(product);
                 } else {
-                    imgIsFavorite.setImageResource(R.drawable.like);
+                    imgIsFavorite.setImageResource(R.drawable.ic_favorite);
                     ProductDetailFragment.product.setFavorite(true);
                     viewModel.insert(ProductDetailFragment.product);
                 }
