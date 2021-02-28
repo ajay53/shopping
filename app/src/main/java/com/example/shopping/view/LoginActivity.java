@@ -1,9 +1,15 @@
 package com.example.shopping.view;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,13 +18,18 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.shopping.R;
+import com.example.shopping.broadcastReceiver.ConnectivityBroadcastReceiver;
+import com.example.shopping.broadcastReceiver.MusicBroadcastReceiver;
 import com.example.shopping.databinding.ActivityLoginBinding;
 import com.example.shopping.model.User;
 import com.example.shopping.utility.Constant;
+import com.example.shopping.utility.NotificationBuilder;
 import com.example.shopping.utility.Util;
 import com.example.shopping.viewmodel.LoginViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,12 +46,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private User user;
     private FirebaseAuth mAuth;
     private final Activity activity = this;
+    private final MusicBroadcastReceiver musicBroadcastReceiver = new MusicBroadcastReceiver();
+    private final ConnectivityBroadcastReceiver connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         init();
+        setBroadcastReceiver();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(musicBroadcastReceiver);
+//        unregisterReceiver(connectivityBroadcastReceiver);
     }
 
     private void init() {
@@ -52,9 +73,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         binding.setUser(user);
         Button btnLogin = findViewById(R.id.btnLogin);
         Button btnRegister = findViewById(R.id.btnRegister);
+        Button btnTest = findViewById(R.id.btnTest);
 
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+        btnTest.setOnClickListener(this);
+    }
+
+    private void setBroadcastReceiver() {
+        IntentFilter iF = new IntentFilter();
+        iF.addAction("com.android.music.metachanged");
+        iF.addAction("com.android.music.playstatechanged");
+        iF.addAction("com.android.music.playbackcomplete");
+        iF.addAction("com.android.music.queuechanged");
+        iF.addAction("com.android.music.musicservicecommand");
+        iF.addAction("com.android.music.updateprogress");
+
+        registerReceiver(musicBroadcastReceiver, iF);
+
+        /*IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectivityBroadcastReceiver, filter);*/
     }
 
     @Override
@@ -83,8 +122,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     Log.w(TAG, "signInWithEmail:failure", task.getException());
                                     Util.showSnackBar(activity, "Authentication failed.");
                                 }
-
-                                // ...
                             }
                         });
                 //setting preferences
@@ -102,8 +139,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         } else if (id == R.id.btnRegister) {
             Intent intent = new Intent(this, RegistrationActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+        } else if (id == R.id.btnTest) {
+            NotificationCompat.Builder builder = NotificationBuilder.testNotificationBuilder(activity, "test","test");
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+//            notificationId is a unique int for each notification that you must define
+            notificationManager.notify(1, builder.build());
         }
     }
 }

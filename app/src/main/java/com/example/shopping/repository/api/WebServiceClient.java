@@ -1,6 +1,6 @@
 package com.example.shopping.repository.api;
 
-import com.example.shopping.utility.Endpoints;
+import com.example.shopping.utility.Endpoint;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WebServiceClient {
 
     static Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Endpoints.BASE_URL)
+            .baseUrl(Endpoint.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

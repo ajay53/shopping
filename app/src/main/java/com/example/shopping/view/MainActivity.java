@@ -1,8 +1,12 @@
 package com.example.shopping.view;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.shopping.R;
+import com.example.shopping.broadcastReceiver.MusicBroadcastReceiver;
 import com.example.shopping.model.User;
 import com.example.shopping.utility.AsyncResponse;
 import com.example.shopping.utility.Constant;
@@ -30,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         init();
     }
 
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         mAuth = FirebaseAuth.getInstance();
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        createNotificationChannel();
         //viewModel.getAll(this);
     }
 
@@ -72,6 +77,22 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();*/
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(Constant.CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override

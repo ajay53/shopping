@@ -87,5 +87,16 @@
             android:layout_marginEnd="20dp"
             android:text="@string/register"
             app:cornerRadius="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnRegister"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:text="Test"
+            app:cornerRadius="10dp" />
     </RelativeLayout>
 </layout>
