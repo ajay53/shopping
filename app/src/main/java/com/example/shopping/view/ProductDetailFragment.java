@@ -30,20 +30,23 @@ import com.example.shopping.viewmodel.ProductDetailViewModel;
 public class ProductDetailFragment extends Fragment implements View.OnClickListener, CustomOnClick, AsyncResponse {
     private static final String TAG = "ProductDetailFragment";
 
+    //variables
     private Context context = null;
     private FragmentActivity fragmentActivity;
     private static Product product = null;
     private ProductDetailViewModel viewModel;
-    private ImageView imgIsFavorite;
     private boolean isSettingFavorite;
     private boolean isAddingInCart;
     private FragmentProductDetailBinding binding;
+
+    //widgets
     private ProgressBar progressBar;
+    private ImageView imgIsFavorite;
+    private Button btnAddToCart;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         init();
     }
 
@@ -71,7 +74,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
     private void initializeViews(FragmentProductDetailBinding binding) {
         imgIsFavorite = binding.getRoot().findViewById(R.id.imgIsFavorite);
         progressBar = binding.getRoot().findViewById(R.id.progressBar);
-        Button btnAddToCart = binding.getRoot().findViewById(R.id.btnAddToCart);
+        btnAddToCart = binding.getRoot().findViewById(R.id.btnAddToCart);
         btnAddToCart.setOnClickListener(this);
 
         binding.setCustomClick(this);
@@ -93,11 +96,10 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void setCustomOnClickListener(View view, Product product) {
-        Log.d(TAG, "setCustomOnClickListener: ");
+        Log.d(TAG, "setCustomOnClickListener: heart icon");
 
         int id = view.getId();
         if (id == view.findViewById(R.id.imgIsFavorite).getId()) {
-
             isSettingFavorite = true;
             imgIsFavorite = view.findViewById(R.id.imgIsFavorite);
             ProductDetailFragment.product = product;
@@ -114,7 +116,8 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
         Product product = (Product) output;
 
         new Handler(Looper.getMainLooper()).post(() -> {
-            if (isSettingFavorite) {        //setting favorite
+            if (isSettingFavorite) {
+                //setting favorite
                 if (product != null) {
                     imgIsFavorite.setImageResource(product.isFavorite() ? R.drawable.ic_not_favorite : R.drawable.ic_favorite);
                     product.setFavorite(!product.isFavorite());
@@ -126,7 +129,8 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
                     viewModel.insert(ProductDetailFragment.product);
                 }
                 isSettingFavorite = false;
-            } else if (isAddingInCart) {      //setting in cart
+            } else if (isAddingInCart) {
+                //setting in cart
                 if (product != null) {
                     if (product.isInCart()) {
                         ProductDetailFragment.product = product;
@@ -141,8 +145,14 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
                     viewModel.insert(ProductDetailFragment.product);
                 }
                 isAddingInCart = false;
-            } else {                        //setting product on page load
+            } else {
+                //setting product on page load
                 ProductDetailFragment.product = product == null ? ProductDetailFragment.product : product;
+                if (ProductDetailFragment.product.isInCart()) {
+                    btnAddToCart.setText(R.string.tvAlreadyInCart);
+                } else {
+                    btnAddToCart.setText(R.string.tvAddToCart);
+                }
                 binding.setProduct(ProductDetailFragment.product);
                 progressBar.setVisibility(View.INVISIBLE);
             }

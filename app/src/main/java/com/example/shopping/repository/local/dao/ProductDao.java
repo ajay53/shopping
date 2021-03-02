@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.shopping.model.Product;
 
@@ -28,7 +29,7 @@ public interface ProductDao {
 
     @Query("Select * from product where inCart = 1")
     LiveData<List<Product>> getAllInCart();
-
+    
     //raw query must have non-void return type
 //    @RawQuery
 //    void runDynamicQuery(SupportSQLiteQuery query);

@@ -1,21 +1,14 @@
 package com.example.shopping.view;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -28,13 +21,9 @@ import com.example.shopping.broadcastReceiver.ConnectivityBroadcastReceiver;
 import com.example.shopping.broadcastReceiver.MusicBroadcastReceiver;
 import com.example.shopping.databinding.ActivityLoginBinding;
 import com.example.shopping.model.User;
-import com.example.shopping.utility.Constant;
 import com.example.shopping.utility.NotificationBuilder;
 import com.example.shopping.utility.Util;
 import com.example.shopping.viewmodel.LoginViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -101,27 +90,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "onClick: ");
         int id = v.getId();
 
+        //collapse soft keyboard
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         if (id == R.id.btnLogin) {
             if (!user.getEmailId().isEmpty() && !user.getPassword().isEmpty()) {
                 //firebase auth
                 mAuth.signInWithEmailAndPassword(user.getEmailId(), user.getPassword())
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "signInWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
 
-                                    Intent intent = new Intent(activity, NavigationActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                    Util.showSnackBar(activity, "Authentication failed.");
-                                }
+                                Intent intent = new Intent(activity, NavigationActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Util.showSnackBar(activity, "Authentication failed.");
                             }
                         });
                 //setting preferences

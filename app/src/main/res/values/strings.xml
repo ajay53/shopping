@@ -12,6 +12,7 @@
     <string name="menu_logout">Logout</string>
 
     <string name="tvAddToCart">Add To Cart</string>
+    <string name="tvAlreadyInCart">Already In Cart</string>
     <string name="cartIsEmpty">Cart is Empty</string>
     <string name="tvBuy">Buy</string>
     <string name="tvBuyAll">Buy All</string>
