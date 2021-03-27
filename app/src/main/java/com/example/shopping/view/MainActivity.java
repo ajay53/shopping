@@ -4,7 +4,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.shopping.R;
-import com.example.shopping.broadcastReceiver.MusicBroadcastReceiver;
 import com.example.shopping.model.User;
 import com.example.shopping.utility.AsyncResponse;
 import com.example.shopping.utility.Constant;

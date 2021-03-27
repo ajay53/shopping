@@ -12,6 +12,7 @@ import com.example.shopping.model.Product;
 import com.example.shopping.repository.api.WebServiceClient;
 import com.example.shopping.repository.local.repository.ProductRepository;
 import com.example.shopping.utility.AsyncResponse;
+import com.example.shopping.utility.Util;
 
 import java.util.List;
 
@@ -67,7 +68,6 @@ public class HomeViewModel extends AndroidViewModel {
             @Override
             public void onFailure(@NonNull Call<List<Product>> call, @NonNull Throwable t) {
                 Log.e(TAG, "onFailure: " + t.getMessage());
-                getProductsApi();
             }
         });
     }

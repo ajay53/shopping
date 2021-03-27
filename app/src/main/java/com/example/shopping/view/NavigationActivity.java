@@ -2,8 +2,9 @@ package com.example.shopping.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,14 +23,25 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.shopping.R;
-import com.example.shopping.utility.Constant;
 import com.example.shopping.utility.Util;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class NavigationActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "NavigationActivity";
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -37,6 +49,7 @@ public class NavigationActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -57,7 +70,9 @@ public class NavigationActivity extends AppCompatActivity implements View.OnClic
         NavigationUI.setupWithNavController(navigationView, navController);
 
         ImageView imgCart = findViewById(R.id.imgCart);
+        ImageView imgWarning = findViewById(R.id.imgWarning);
         imgCart.setOnClickListener(this);
+        imgWarning.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -90,6 +105,54 @@ public class NavigationActivity extends AppCompatActivity implements View.OnClic
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    private void getFile() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent, 1);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            Uri uri = data.getData();
+            String s = uri.toString();
+            String path = data.getDataString();
+            byte[] bbb = path.getBytes();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadFile(Uri uri){
+        try {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference mountainsRef = storageRef.child("sample.pdf");
+
+            InputStream stream = new FileInputStream(new File("path/to/images/rivers.jpg"));
+            UploadTask uploadTask = mountainsRef.putStream(stream);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d(TAG, "onFailure: ");
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d(TAG, "onSuccess: ");
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                }
+            });
+            Log.d(TAG, "onActivityResult: ");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showConfirmationDialog() {
@@ -131,6 +194,8 @@ public class NavigationActivity extends AppCompatActivity implements View.OnClic
         if (id == R.id.imgCart) {
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
             navController.navigate(R.id.nav_cart, null);
+        } else if (id == R.id.imgWarning) {
+            getFile();
         } else if (id == R.id.nav_home) {
             Util.showSnackBar(this, "Home Click");
         }
