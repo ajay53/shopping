@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     private static final String TAG = "MainActivity";
 
     private MainViewModel viewModel;
-    public static SharedPreferences sharedPref;
+    //    public static SharedPreferences sharedPref;
     private FirebaseAuth mAuth;
 
     @Override
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         Log.d(TAG, "init: ");
 
         mAuth = FirebaseAuth.getInstance();
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+//        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         createNotificationChannel();
         //viewModel.getAll(this);
@@ -108,5 +108,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAuth = null;
     }
 }

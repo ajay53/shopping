@@ -30,7 +30,6 @@
     <string name="register">Register</string>
     <string name="itemAlreadyInCart">Item Already in Cart</string>
     <string name="logo">Logo</string>
-    <string name="title_activity_registration">RegistrationActivity</string>
     <string name="channel_name">test</string>
     <string name="channel_description">Test Button Click</string>
 </resources>

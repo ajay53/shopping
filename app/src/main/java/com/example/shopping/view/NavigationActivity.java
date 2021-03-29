@@ -79,7 +79,9 @@ public class NavigationActivity extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+//        MenuItem action_settings = findViewById(R.id.action_settings);
+//        action_settings.setOnMenuItemClickListener(this);
         return true;
     }
 
@@ -127,7 +129,7 @@ public class NavigationActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void uploadFile(Uri uri){
+    private void uploadFile(Uri uri) {
         try {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
@@ -199,5 +201,16 @@ public class NavigationActivity extends AppCompatActivity implements View.OnClic
         } else if (id == R.id.nav_home) {
             Util.showSnackBar(this, "Home Click");
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            navController.navigate(R.id.nav_settings, null);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

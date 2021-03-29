@@ -2,13 +2,16 @@ package com.example.shopping.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
@@ -31,6 +34,7 @@ import com.example.shopping.utility.Util;
 import com.example.shopping.viewmodel.LoginViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final Activity activity = this;
     private final MusicBroadcastReceiver musicBroadcastReceiver = new MusicBroadcastReceiver();
     private final ConnectivityBroadcastReceiver connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver();
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,20 +62,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setBroadcastReceiver();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(musicBroadcastReceiver);
-//        unregisterReceiver(connectivityBroadcastReceiver);
-    }
-
     private void init() {
         Log.d(TAG, "init: ");
 
         mAuth = FirebaseAuth.getInstance();
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         user = new User("", "", "", "", "");
         binding.setUser(user);
+        TextInputEditText edtPassword = findViewById(R.id.edtPassword);
         Button btnLogin = findViewById(R.id.btnLogin);
         Button btnRegister = findViewById(R.id.btnRegister);
         Button btnTest = findViewById(R.id.btnTest);
@@ -78,6 +78,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
         btnTest.setOnClickListener(this);
+
+        edtPassword.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                loginAction();
+            }
+            return false;
+        });
     }
 
     private void askPermissions() {
@@ -143,7 +150,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
         // do somthing...
+    }
 
+    private void loginAction() {
+        //firebase auth
+        mAuth.signInWithEmailAndPassword(user.getEmailId(), user.getPassword())
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+
+                        Intent intent = new Intent(activity, NavigationActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Util.showSnackBar(activity, "Authentication failed.");
+                    }
+                });
+        //setting preferences
+        /*SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Constant.USERNAME, user.getUsername());
+        editor.putString(Constant.PASSWORD, user.getPassword());
+        editor.apply();
+
+        Intent intent = new Intent(this, NavigationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();*/
     }
 
     @Override
@@ -160,34 +197,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (id == R.id.btnLogin) {
             if (!user.getEmailId().isEmpty() && !user.getPassword().isEmpty()) {
-                //firebase auth
-                mAuth.signInWithEmailAndPassword(user.getEmailId(), user.getPassword())
-                        .addOnCompleteListener(this, task -> {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-
-                                Intent intent = new Intent(activity, NavigationActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                Util.showSnackBar(activity, "Authentication failed.");
-                            }
-                        });
-                //setting preferences
-                /*SharedPreferences.Editor editor = MainActivity.sharedPref.edit();
-                editor.putString(Constant.USERNAME, user.getUsername());
-                editor.putString(Constant.PASSWORD, user.getPassword());
-                editor.apply();
-
-                Intent intent = new Intent(this, NavigationActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();*/
+                loginAction();
             } else {
                 Util.showSnackBar(this, "Please fill all fields");
             }
@@ -195,7 +205,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
         } else if (id == R.id.btnTest) {
-            NotificationCompat.Builder builder = NotificationBuilder.testNotificationBuilder(activity, "test","test");
+            NotificationCompat.Builder builder = NotificationBuilder.testNotificationBuilder(activity, "test", "test");
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.notify(1, builder.build());
 
@@ -241,5 +251,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(musicBroadcastReceiver);
+        mAuth = null;
+//        unregisterReceiver(connectivityBroadcastReceiver);
     }
 }

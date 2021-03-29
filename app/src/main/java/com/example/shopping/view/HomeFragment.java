@@ -78,8 +78,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Asyn
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
             llProducts.removeAllViews();
-            displayProducts(products);
-            progressBar.setVisibility(View.INVISIBLE);
+            if (products.size() != 0) {
+                displayProducts(products);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
         });
     }
 

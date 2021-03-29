@@ -14,6 +14,7 @@ import com.example.shopping.repository.local.repository.ProductRepository;
 import com.example.shopping.utility.AsyncResponse;
 import com.example.shopping.utility.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,6 +31,7 @@ public class HomeViewModel extends AndroidViewModel {
     public HomeViewModel(Application application) {
         super(application);
         mProducts = new MutableLiveData<>();
+        mProducts.setValue(new ArrayList<>());
         repository = new ProductRepository(application);
     }
 
