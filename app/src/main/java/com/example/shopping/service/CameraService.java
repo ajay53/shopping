@@ -13,9 +13,12 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.OutputConfiguration;
+import android.hardware.camera2.params.SessionConfiguration;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
@@ -23,6 +26,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Size;
@@ -33,6 +37,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.shopping.listener.PictureCapturingListener;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.util.concurrent.HandlerExecutor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,6 +48,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -58,6 +65,8 @@ public class CameraService extends ACameraService {
     private String frontCameraId;
     private byte[] currImage;
     private String currPath;
+    Handler cameraHandler;
+    private CaptureRequest.Builder captureBuilder;
     /***
      * camera ids queue.
      */
@@ -98,6 +107,9 @@ public class CameraService extends ACameraService {
         this.picturesTaken = new TreeMap<>();
         this.capturingListener = listener;
         this.cameraIds = new LinkedList<>();
+        HandlerThread ht = new HandlerThread("Camera Handler Thread");
+        ht.start();
+        cameraHandler = new Handler(ht.getLooper());
         try {
             final String[] cameraIds = manager.getCameraIdList();
             //___________Front Cam
@@ -160,9 +172,9 @@ public class CameraService extends ACameraService {
         }
     };
 
-
     private final ImageReader.OnImageAvailableListener onImageAvailableListener = (ImageReader imReader) -> {
-        final Image image = imReader.acquireLatestImage();
+        final Image image = imReader.acquireNextImage();
+//        final Image image = imReader.acquireLatestImage();
         final ByteBuffer buffer = image.getPlanes()[0].getBuffer();
         final byte[] bytes = new byte[buffer.capacity()];
 
@@ -173,6 +185,22 @@ public class CameraService extends ACameraService {
         image.close();
     };
 
+    private final CameraCaptureSession.StateCallback takePictureStateCallback = new CameraCaptureSession.StateCallback() {
+        @Override
+        public void onConfigured(@NonNull CameraCaptureSession session) {
+            try {
+                session.capture(captureBuilder.build(), captureListener, null);
+            } catch (final CameraAccessException e) {
+                Log.e(TAG, " exception occurred while accessing " + frontCameraId, e);
+            }
+        }
+
+        @Override
+        public void onConfigureFailed(@NonNull CameraCaptureSession session) {
+
+        }
+    };
+
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
         public void onOpened(@NonNull CameraDevice camera) {
@@ -180,14 +208,22 @@ public class CameraService extends ACameraService {
             Log.d(TAG, "camera " + camera.getId() + " opened");
             cameraDevice = camera;
             Log.i(TAG, "Taking picture from camera " + camera.getId());
-            //Take the picture after some delay. It may resolve getting a black dark photos.
-            new Handler().postDelayed(() -> {
+
+            cameraHandler.postDelayed(() -> {
                 try {
                     takePicture();
                 } catch (final CameraAccessException e) {
                     Log.e(TAG, " exception occurred while taking picture from " + frontCameraId, e);
                 }
             }, 500);
+            //Take the picture after some delay. It may resolve getting a black dark photos.
+            /*new Handler().postDelayed(() -> {
+                try {
+                    takePicture();
+                } catch (final CameraAccessException e) {
+                    Log.e(TAG, " exception occurred while taking picture from " + frontCameraId, e);
+                }
+            }, 500);*/
         }
 
         @Override
@@ -212,7 +248,6 @@ public class CameraService extends ACameraService {
             capturingListener.onDoneCapturingAllPhotos(picturesTaken);
         }
 
-
         @Override
         public void onError(@NonNull CameraDevice camera, int error) {
             Log.e(TAG, "camera in error, int code " + error);
@@ -221,7 +256,6 @@ public class CameraService extends ACameraService {
             }
         }
     };
-
 
     private void takePicture() throws CameraAccessException {
         if (null == cameraDevice) {
@@ -240,26 +274,33 @@ public class CameraService extends ACameraService {
         final ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
         final List<Surface> outputSurfaces = new ArrayList<>();
         outputSurfaces.add(reader.getSurface());
-        final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+        captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
         captureBuilder.addTarget(reader.getSurface());
         captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
         captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation());
         reader.setOnImageAvailableListener(onImageAvailableListener, null);
-        cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
-                    @Override
-                    public void onConfigured(@NonNull CameraCaptureSession session) {
-                        try {
-                            session.capture(captureBuilder.build(), captureListener, null);
-                        } catch (final CameraAccessException e) {
-                            Log.e(TAG, " exception occurred while accessing " + frontCameraId, e);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            OutputConfiguration outputConfiguration = new OutputConfiguration(reader.getSurface());
+            SessionConfiguration sessionConfiguration = new SessionConfiguration(SessionConfiguration.SESSION_REGULAR, Collections.singletonList(outputConfiguration), new HandlerExecutor(cameraHandler.getLooper()), takePictureStateCallback);
+            cameraDevice.createCaptureSession(sessionConfiguration);
+        } else {
+            cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
+                        @Override
+                        public void onConfigured(@NonNull CameraCaptureSession session) {
+                            try {
+                                session.capture(captureBuilder.build(), captureListener, null);
+                            } catch (final CameraAccessException e) {
+                                Log.e(TAG, " exception occurred while accessing " + frontCameraId, e);
+                            }
+                        }
+
+                        @Override
+                        public void onConfigureFailed(@NonNull CameraCaptureSession session) {
                         }
                     }
-
-                    @Override
-                    public void onConfigureFailed(@NonNull CameraCaptureSession session) {
-                    }
-                }
-                , null);
+                    , null);
+        }
     }
 
 
@@ -320,9 +361,9 @@ public class CameraService extends ACameraService {
             cameraDevice.close();
             cameraDevice = null;
         }
-        if (null != imageReader) {
+        /*if (null != imageReader) {
             imageReader.close();
             imageReader = null;
-        }
+        }*/
     }
 }

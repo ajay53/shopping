@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.hardware.camera2.CameraManager;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.Surface;
+import android.view.WindowManager;
 
 import com.example.shopping.listener.PictureCapturingListener;
 
@@ -38,6 +40,8 @@ public abstract class ACameraService {
      * @return orientation
      */
     int getOrientation() {
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
         final int rotation = this.activity.getWindowManager().getDefaultDisplay().getRotation();
         return ORIENTATIONS.get(rotation);
     }
